@@ -13,15 +13,24 @@ function processRequest(req, res) { // <-- What are these parameters?
   }
 
   // POST request to the home route '/'
-  else if (req.method === 'POST' && req.url === '/') {
-    res.write('Stop trying to post to my home route.\n'); // Write response
-    res.end(); // End response. What happens if you don't include this line of code?
+  else if (req.method === 'POST') {
+    let data = '';
+    req.on('data', (chunk) => {
+      console.log('GOT DATA', chunk);
+      console.log('\n');
+      data += chunk;
+    });
+    req.on('end', () => {
+      console.log('END OF BODY');
+      res.write('I see you trying to POST. I got: ' + data);
+      res.end();
+    });
   }
 
   // GET request to the route '/about'
-  else if (req.method === 'POST' && req.url === '/about') {
-    res.write("I don't like to talk about myself.\n"); // Write response
-    res.end(); // End response. What happens if you don't include this line of code?
+  else if (req.method === 'GET' && req.url === '/about') {
+    res.write("I don't like to talk about myself.\n");
+    res.end();
   }
 
   // If none of the above METHOD and URL combinations are hit, then this is the
